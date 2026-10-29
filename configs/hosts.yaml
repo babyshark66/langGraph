@@ -1,0 +1,35 @@
+# Danh sách host / VM mà NetDoctor có thể kết nối SSH để chẩn đoán.
+# Auth: "password" hoặc "key". Nhánh "checks" (tuỳ chọn) cho phép tuỳ biến
+# lệnh thu thập thông tin riêng cho từng host.
+
+defaults:
+  port: 22
+  connect_timeout: 10
+  command_timeout: 60
+  max_retries: 2
+  # Thêm "sudo" phía trước các lệnh cần quyền root (yêu cầu NOPASSWD)
+  sudo: false
+
+hosts:
+  - name: vm-web-01
+    host: 192.168.122.10
+    username: admin
+    auth: key
+    key_file: ~/.ssh/id_ed25519
+    tags: [web, production]
+
+  - name: vm-db-01
+    host: 192.168.122.20
+    username: admin
+    auth: password
+    password: "CHANGE_ME"
+    tags: [database, production]
+
+  # Host demo nội bộ: không cần SSH thật, mô phỏng sự cố (disk đầy, link down,
+  # service chết, brute-force) để trải nghiệm toàn bộ luồng của agent.
+  - name: mock-demo
+    host: 127.0.0.1
+    username: demo
+    auth: none
+    mock: true
+    tags: [demo]
